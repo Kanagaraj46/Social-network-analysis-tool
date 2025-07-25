@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNA Tool - Upload</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Social Network Analysis Tool</h1>
+        
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
+        
+        <div class="upload-box">
+            <h2>Upload Adjacency List</h2>
+            <p>Each line should contain a user followed by their friends, separated by spaces:</p>
+            <pre>user1 user2 user3
+user2 user1 user4
+user3 user1
+user4 user2</pre>
+            
+            <form method="POST" enctype="multipart/form-data">
+                <input type="file" name="file" accept=".txt" required>
+                <button type="submit">Analyze</button>
+            </form>
+        </div>
+        
+        <div class="features">
+            <h2>Analysis Features</h2>
+            <ul>
+                <li>Network visualization</li>
+                <li>Community detection</li>
+                <li>Influencer identification</li>
+                <li>Friend recommendations</li>
+                <li>Fake account detection</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

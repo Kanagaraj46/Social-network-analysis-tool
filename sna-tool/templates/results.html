@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNA Tool - Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Analysis Results</h1>
+        
+        <div class="network-stats">
+            <h2>Network Statistics</h2>
+            <p><strong>Nodes:</strong> {{ num_nodes }} | <strong>Edges:</strong> {{ num_edges }} | <strong>Density:</strong> {{ "%.4f"|format(density) }}</p>
+            <p><strong>Average Path Length:</strong> 
+                {% if avg_path_length is string %}
+                    {{ avg_path_length }}
+                {% else %}
+                    {{ "%.2f"|format(avg_path_length) }}
+                {% endif %}
+            </p>
+        </div>
+        
+        <div class="visualization">
+            <h2>Network Visualization</h2>
+            <img src="data:image/png;base64,{{ visualization }}" alt="Network Graph">
+            <p>Colors represent different communities detected in the network.</p>
+        </div>
+        
+        <div class="influencers">
+            <h2>Top Influencers</h2>
+            
+            <div class="influencer-type">
+                <h3>By Degree Centrality</h3>
+                <ol>
+                    {% for user, score in top_degree %}
+                    <li>{{ user }} ({{ "%.3f"|format(score) }})</li>
+                    {% endfor %}
+                </ol>
+            </div>
+            
+            <div class="influencer-type">
+                <h3>By Betweenness Centrality</h3>
+                <ol>
+                    {% for user, score in top_betweenness %}
+                    <li>{{ user }} ({{ "%.3f"|format(score) }})</li>
+                    {% endfor %}
+                </ol>
+            </div>
+            
+            <div class="influencer-type">
+                <h3>By Closeness Centrality</h3>
+                <ol>
+                    {% for user, score in top_closeness %}
+                    <li>{{ user }} ({{ "%.3f"|format(score) }})</li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+        
+        <div class="communities">
+            <h2>Community Detection</h2>
+            <p>Detected {{ community_stats|length }} communities:</p>
+            <ul>
+                {% for comm, size in community_stats.items() %}
+                <li>Community {{ comm }}: {{ size }} members</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="recommendations">
+            <h2>Friend Recommendations</h2>
+            <p>Top 5 friend recommendations for <strong>{{ sample_user }}</strong> based on Jaccard similarity:</p>
+            <ol>
+                {% for user, score in recommendations %}
+                <li>{{ user }} (similarity: {{ "%.3f"|format(score) }})</li>
+                {% endfor %}
+            </ol>
+        </div>
+        
+        <div class="fake-accounts">
+            <h2>Potential Fake Accounts</h2>
+            <p>Accounts with unusually low clustering coefficients (may indicate fake accounts):</p>
+            {% if potential_fakes %}
+            <ol>
+                {% for user, coeff in potential_fakes %}
+                <li>{{ user }} (coefficient: {{ "%.4f"|format(coeff) }})</li>
+                {% endfor %}
+            </ol>
+            {% else %}
+            <p>No potential fake accounts detected.</p>
+            {% endif %}
+        </div>
+        
+        <div class="new-analysis">
+            <a href="{{ url_for('index') }}">Perform New Analysis</a>
+        </div>
+    </div>
+</body>
+</html>
